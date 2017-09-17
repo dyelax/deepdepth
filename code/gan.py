@@ -138,10 +138,6 @@ def event_handler(event):
 
 
     if isinstance(event, paddle.event.EndPass):
-        # save parameters
-        with open('params_epoch_%d.tar' % event.pass_id, 'w') as f:
-            parameters.to_tar(f)
-
         if event.pass_id % 10 == 0:
             result = paddle.infer(output_layer=preds, parameters=parameters,
                                   input=[[img_reader().next()[0]]],
@@ -151,6 +147,10 @@ def event_handler(event):
             pil_img = Image.fromarray(denormed_img.astype('uint8'))
             pil_img.save('/mnt/results/%d.jpg' % event.pass_id)
             print 'Image saved'
+
+            # save parameters
+            with open('params_epoch_%d.tar' % event.pass_id, 'w') as f:
+                parameters.to_tar(f)
 
         # result = trainer.test(
         #     reader=paddle.batch(
