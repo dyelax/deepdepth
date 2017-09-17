@@ -72,7 +72,8 @@ def G(inputs):
         input=inputs,
         num_channels=3,
         filter_size=3,
-        num_filters=1)
+        num_filters=1,
+        padding=1)
     return out
 
 
