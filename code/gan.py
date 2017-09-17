@@ -147,15 +147,17 @@ def event_handler(event):
         if event.batch_id % 1 == 0:
             print "\nEpoch %d, Batch %d, Cost %f, %s" % (
                 event.pass_id, event.batch_id, event.cost, event.metrics)
-        else:
-            sys.stdout.write('.')
-            sys.stdout.flush()
+        # else:
+        #     sys.stdout.write('.')
+        #     sys.stdout.flush()
 
-        # if event.batch_id % 10 == 0:
-        #     result = trainer.test(reader=reader, feeding=feeding).reshape([img_height, img_width, img_depth])
-        #     denormed_result = (result + 1) * (255 / 2.)
-        #     img = Image.fromarray(denormed_result).astype(np.uint8)
-        #     img.save('results/%d.jpg') % event.batch_id
+        if event.batch_id % 10 == 0:
+            print 'Saving image...'
+            result = trainer.test(reader=reader, feeding=feeding).reshape([img_height, img_width, img_depth])
+            denormed_result = (result + 1) * (255 / 2.)
+            img = Image.fromarray(denormed_result).astype(np.uint8)
+            img.save('results/%d.jpg') % event.batch_id
+            print 'Image saved'
 
     if isinstance(event, paddle.event.EndPass):
         # save parameters
