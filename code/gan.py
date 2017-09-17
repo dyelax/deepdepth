@@ -85,6 +85,8 @@ def img_reader():
     # for i in xrange(num_files / 2): # There is an rgb and d_image image per frame
     for i in xrange(1): # There is an rgb and d_image image per frame
         d_image = Image.open(os.path.join(DIR, 'd-%d.pgm' % i)).resize((171, 128), Image.ANTIALIAS)
+        d_image.convert('L').save('/mnt/results/depth.jpg')
+
         rgb_image = Image.open(os.path.join(DIR, 'r-%d.ppm' % i)).resize((171, 128), Image.ANTIALIAS)
         final_width = 128
         final_height = 128
@@ -99,7 +101,7 @@ def img_reader():
         d_image = d_image.crop((left, top, right, bottom))
         rgb_image = rgb_image.crop((left, top, right, bottom))
 
-        d_image.convert('L').save('/mnt/results/depth.jpg')
+        # d_image.convert('L').save('/mnt/results/depth.jpg')
         rgb_image.convert('RGB').save('/mnt/results/rgb.jpg')
 
         depth_arr = np.array(d_image).flatten()
