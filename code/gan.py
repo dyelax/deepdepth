@@ -151,11 +151,11 @@ def event_handler(event):
             sys.stdout.write('.')
             sys.stdout.flush()
 
-        if event.batch_id % 10 == 0:
-            result = trainer.test(reader=reader, feeding=feeding).reshape([img_height, img_width, img_depth])
-            denormed_result = (result + 1) * (255 / 2.)
-            img = Image.fromarray(denormed_result).astype(np.uint8)
-            img.save('results/%d.jpg') % event.batch_id
+        # if event.batch_id % 10 == 0:
+        #     result = trainer.test(reader=reader, feeding=feeding).reshape([img_height, img_width, img_depth])
+        #     denormed_result = (result + 1) * (255 / 2.)
+        #     img = Image.fromarray(denormed_result).astype(np.uint8)
+        #     img.save('results/%d.jpg') % event.batch_id
 
     if isinstance(event, paddle.event.EndPass):
         # save parameters
