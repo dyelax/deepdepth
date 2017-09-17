@@ -11,15 +11,11 @@ def conv_block(inputs,
                groups,
                num_channels=None,
                filter_size=3,
-               pool=False,
                activation=paddle.activation.Relu(),
                dropout=0.5):
     return paddle.networks.img_conv_group(
         input=inputs,
         num_channels=num_channels,
-        pool_size=(2 if pool else 1),
-        pool_stride=(2 if pool else 1),
-        pool_type=paddle.pooling.Max(),
         conv_num_filter=[num_filter] * groups,
         conv_filter_size=filter_size,
         conv_act=activation,
@@ -27,11 +23,12 @@ def conv_block(inputs,
 
 def D(inputs):
     # VGG19 Kinda
-    conv1 = conv_block(inputs, 64, 2, 1, pool=True)
-    conv2 = conv_block(conv1, 128, 2, pool=True)
-    conv3 = conv_block(conv2, 256, 4, pool=True)
-    conv4 = conv_block(conv3, 512, 4, pool=True)
-    conv5 = conv_block(conv4, 512, 4, pool=True)
+    # TODO: Pooling
+    conv1 = conv_block(inputs, 64, 2, 1)
+    conv2 = conv_block(conv1, 128, 2)
+    conv3 = conv_block(conv2, 256, 4)
+    conv4 = conv_block(conv3, 512, 4)
+    conv5 = conv_block(conv4, 512, 4)
 
     fc_dim = 4096
     fc1 = paddle.layer.fc(
