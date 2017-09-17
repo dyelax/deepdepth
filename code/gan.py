@@ -153,13 +153,15 @@ def event_handler(event):
 
         if event.batch_id % 10 == 0:
             print 'Saving image...'
-            result = trainer.test(reader=reader, feeding=feeding).reshape([img_height, img_width, img_depth])
-            print 'a'
-            denormed_result = (result + 1) * (255 / 2.)
-            print 'b'
-            img = Image.fromarray(denormed_result).astype(np.uint8)
-            print 'c'
-            img.save('results/%d.jpg') % event.batch_id
+            result = trainer.test(reader=reader, feeding=feeding)#.reshape([img_height, img_width, img_depth])
+            print result.metrics
+            print result
+            # print 'a'
+            # denormed_result = (result + 1) * (255 / 2.)
+            # print 'b'
+            # img = Image.fromarray(denormed_result).astype(np.uint8)
+            # print 'c'
+            # img.save('results/%d.jpg') % event.batch_id
             print 'Image saved'
 
     if isinstance(event, paddle.event.EndPass):
