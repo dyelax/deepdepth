@@ -27,7 +27,6 @@ def conv(inputs, fms, input_fms=None, filter_size=3, activation=paddle.activatio
     )
 
 # def D(inputs):
-#     # TODO: Pooling
 #     conv1 = conv(inputs, 32, input_fms=1)
 #     conv2 = conv(conv1, 64)
 #     conv3 = conv(conv2, 128)
@@ -132,7 +131,7 @@ def img_reader():
 
 
 # Create optimizer
-optimizer = paddle.optimizer.Adam(learning_rate=0.00000001)
+optimizer = paddle.optimizer.Adam(learning_rate=0.00001)
 
 # Create trainer
 trainer = paddle.trainer.SGD(cost=cost,
