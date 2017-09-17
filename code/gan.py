@@ -108,10 +108,11 @@ def img_reader():
         d_image = d_image.crop((left, top, right, bottom))
         rgb_image = rgb_image.crop((left, top, right, bottom))
 
+        depth_tensor = np.array(d_image, dtype=float).transpose((2, 0, 1))
+        rgb_tensor = np.array(rgb_image, dtype=float).transpose((2, 0, 1))
 
-
-        depth_arr = np.array(d_image, dtype=float).flatten()
-        rgb_arr = np.array(rgb_image, dtype=float).flatten()
+        depth_arr = depth_tensor.flatten()
+        rgb_arr = rgb_tensor.flatten()
 
         # Normalize between between -1 and 1
         rgb_norm = rgb_arr / np.max(np.abs(rgb_arr))
@@ -178,7 +179,8 @@ def save_img(epoch, step):
 
     rgb_image = rgb_image.crop((left, top, right, bottom))
 
-    rgb_arr = np.array(rgb_image, dtype=float).flatten()
+    rgb_tensor = np.array(rgb_image, dtype=float).transpose((2, 0, 1))
+    rgb_arr = rgb_tensor.flatten()
 
     # Normalize between between -1 (0?) and 1
     rgb_norm = rgb_arr / np.max(np.abs(rgb_arr))
