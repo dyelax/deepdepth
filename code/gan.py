@@ -53,9 +53,11 @@ def G(inputs):
     conv2 = conv(conv1, 128)
     conv3 = conv(conv2, 256, filter_size=5)
     conv4 = conv(conv3, 512, filter_size=5)
-    conv5 = conv(conv4, 256, filter_size=5)
-    conv6 = conv(conv5, 128)
-    out = conv(conv6, 1, activation=paddle.activation.Linear())
+    conv5 = conv(conv4, 1024, filter_size=5)
+    conv6 = conv(conv5, 512, filter_size=5)
+    conv7 = conv(conv6, 256, filter_size=5)
+    conv8 = conv(conv7, 128)
+    out = conv(conv8, 1, activation=paddle.activation.Linear())
 
     return out
 
