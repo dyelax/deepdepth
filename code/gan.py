@@ -157,7 +157,8 @@ def event_handler(event):
         with open('/mnt/results/default/params_epoch_%d.tar' % event.pass_id, 'w') as f:
             parameters.to_tar(f)
 
-        save_img(event.pass_id)
+        save_img(event.pass_id, event.batch_id)
+
         # result = trainer.test(
         #     reader=paddle.batch(
         #         paddle.dataset.cifar.test10(), batch_size=128),
