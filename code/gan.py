@@ -149,15 +149,13 @@ def event_handler(event):
             print "\nEpoch %d, Batch %d, Cost %f, %s" % (
                 event.pass_id, event.batch_id, event.cost, event.metrics)
 
-        if event.batch_id % 500 == 0:
+        if event.batch_id % 1 == 0:
             save_img(event.pass_id, event.batch_id)
 
     if isinstance(event, paddle.event.EndPass):
         # save parameters
         with open('/mnt/results/default/params_epoch_%d.tar' % event.pass_id, 'w') as f:
             parameters.to_tar(f)
-
-        save_img(event.pass_id, event.batch_id)
 
         # result = trainer.test(
         #     reader=paddle.batch(
