@@ -6,16 +6,17 @@ import numpy as np
 # Models
 ##
 
+#TODO: CUDNN
 def conv_block(inputs,
                num_filter,
                groups,
-               num_channels=None,
+               input_channels=None,
                filter_size=3,
                activation=paddle.activation.Relu(),
                dropout=0.5):
     return paddle.networks.img_conv_group(
         input=inputs,
-        num_channels=num_channels,
+        num_channels=input_channels,
         conv_num_filter=[num_filter] * groups,
         conv_filter_size=filter_size,
         conv_act=activation,
@@ -24,7 +25,7 @@ def conv_block(inputs,
 def D(inputs):
     # VGG19 Kinda
     # TODO: Pooling
-    conv1 = conv_block(inputs, 64, 2, 1)
+    conv1 = conv_block(inputs, 64, 2, input_channels=1)
     conv2 = conv_block(conv1, 128, 2)
     conv3 = conv_block(conv2, 256, 4)
     conv4 = conv_block(conv3, 512, 4)
@@ -45,14 +46,25 @@ def D(inputs):
 
     return out
 
+def conv(inputs, fms, input_fms=None, filter_size=3, activation=paddle.activation.Relu()):
+    return paddle.layer.img_conv(
+        input=inputs,
+        filter_size=filter_size,
+        num_filters=fms,
+        num_channels=input_fms,
+        act=activation,
+        bias_attr=None,
+        padding=(filter_size / 2 - 1)
+    )
+
 def G(inputs):
-    conv1 = conv_block(inputs, 64, 2, 1)
-    conv2 = conv_block(conv1, 128, 2)
-    conv3 = conv_block(conv2, 256, 2, filter_size=5)
-    conv4 = conv_block(conv3, 512, 2, filter_size=5)
-    conv5 = conv_block(conv4, 256, 2, filter_size=5)
-    conv6 = conv_block(conv5, 128, 2)
-    out = conv_block(conv6, 1, 1, dropout=0)
+    conv1 = conv(inputs, 64, 2, 1)
+    conv2 = conv(conv1, 128, 2)
+    conv3 = conv(conv2, 256, 2, filter_size=5)
+    conv4 = conv(conv3, 512, 2, filter_size=5)
+    conv5 = conv(conv4, 256, 2, filter_size=5)
+    conv6 = conv(conv5, 128, 2)
+    out = conv_block(conv6, 1, 1)
 
     return out
 
