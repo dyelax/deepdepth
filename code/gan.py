@@ -1,4 +1,5 @@
 import paddle.v2 as paddle
+import sys
 
 ##
 # Models
@@ -58,4 +59,69 @@ def G(inputs):
     return out
 
 
+##
+# Run
+##
 
+paddle.init(use_gpu=True, trainer_count=1)
+
+img_height = 28
+img_width = 28
+img_depth = 3
+
+inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
+    img_height * img_width * img_depth))
+labels = paddle.layer.data(name='labels', type=paddle.data_type.dense_vector(
+    img_height * img_width * img_depth))
+
+cost = paddle.layer.mse_cost(input=G(inputs), label=labels)
+
+parameters = paddle.parameters.create(cost)
+
+
+def img_reader():
+    # TODO: read in data and yield
+    pass
+
+
+# Create optimizer
+optimizer = paddle.optimizer.Adam(learning_rate=0.0001)
+
+# Create trainer
+trainer = paddle.trainer.SGD(cost=cost,
+                             parameters=parameters,
+                             update_equation=optimizer)
+
+batch_size = 32
+reader = paddle.minibatch.batch(
+    paddle.reader.shuffle(img_reader, batch_size), batch_size)
+
+feeding={'inputs': 0,
+         'labels': 1}
+
+# event handler to track training and testing process
+def event_handler(event):
+    if isinstance(event, paddle.event.EndIteration):
+        if event.batch_id % 100 == 0:
+            print "\nEpoch %d, Batch %d, Cost %f, %s" % (
+                event.pass_id, event.batch_id, event.cost, event.metrics)
+        else:
+            sys.stdout.write('.')
+            sys.stdout.flush()
+    if isinstance(event, paddle.event.EndPass):
+        # save parameters
+        with open('params_epoch_%d.tar' % event.pass_id, 'w') as f:
+            parameters.to_tar(f)
+
+        result = trainer.test(
+            reader=paddle.batch(
+                paddle.dataset.cifar.test10(), batch_size=128),
+            feeding=feeding)
+        print "\nTest with Epoch %d, %s" % (event.pass_id, result.metrics)
+
+
+trainer.train(
+    reader=reader,
+    num_passes=200,
+    event_handler=event_handler,
+    feeding=feeding)
