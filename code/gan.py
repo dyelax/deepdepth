@@ -165,13 +165,10 @@ def event_handler(event):
             result = paddle.infer(output_layer=preds, parameters=parameters,
                                   input=[[img_reader().next()[0]]],
                                   feeding=feeding)
-            print 'a'
             img = result.reshape([img_height, img_width])
             denormed_img = (img + 1) * (255. / 2.)
-            print 'b'
             pil_img = Image.fromarray(denormed_img.astype('uint8'))
-            print 'c'
-            pil_img.save('/mnt/results/%d.jpg' % event.batch_id)
+            pil_img.save('/mnt/results/%d.jpg' % event.pass_id)
             print 'Image saved'
 
         # result = trainer.test(
