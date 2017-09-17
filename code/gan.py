@@ -101,10 +101,11 @@ parameters = paddle.parameters.create(cost)
 
 def img_reader():
     # TODO: read in data and yield
-    yield (
-        np.random.random([img_height, img_width, img_depth]) * 2 - 1,
-        np.random.random([img_height, img_width, 1]) * 2 - 1
-    )
+    while True:
+        yield (
+            np.random.random([img_height, img_width, img_depth]) * 2 - 1,
+            np.random.random([img_height, img_width, 1]) * 2 - 1
+        )
 
 
 # Create optimizer
