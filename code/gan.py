@@ -129,7 +129,7 @@ def img_reader():
 
 
 # Create optimizer
-optimizer = paddle.optimizer.Adam(learning_rate=0.00005)
+optimizer = paddle.optimizer.Adam(learning_rate=0.00001)
 
 # Create trainer
 trainer = paddle.trainer.SGD(cost=cost,
@@ -149,7 +149,7 @@ def event_handler(event):
             print "\nEpoch %d, Batch %d, Cost %f, %s" % (
                 event.pass_id, event.batch_id, event.cost, event.metrics)
 
-        if event.batch_id % 1 == 0:
+        if event.batch_id % 500 == 0:
             save_img(event.pass_id, event.batch_id)
 
     if isinstance(event, paddle.event.EndPass):
