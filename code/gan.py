@@ -74,7 +74,7 @@ inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
 labels = paddle.layer.data(name='labels', type=paddle.data_type.dense_vector(
     img_height * img_width * img_depth))
 
-cost = paddle.layer.mse_cost(input=G(inputs), label=labels)
+cost = paddle.layer.square_error_cost(input=G(inputs), label=labels)
 
 parameters = paddle.parameters.create(cost)
 
