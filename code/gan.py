@@ -2,7 +2,7 @@ import paddle.v2 as paddle
 import sys
 import numpy as np
 import os
-import PIL
+from PIL import Image
 
 img_height = 128
 img_width = 128
@@ -97,8 +97,8 @@ def img_reader():
 
     while True:
         for i in xrange(num_files / 2): # There is an rgb and d_image image per frame
-            d_image = PIL.open('d-%d.pgm' % i)
-            rgb_image = PIL.open('r-%d.ppm' % i)
+            d_image = Image.open('d-%d.pgm' % i)
+            rgb_image = Image.open('r-%d.ppm' % i)
             final_width = 128
             final_height = 128
 
