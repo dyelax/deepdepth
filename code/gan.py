@@ -87,7 +87,7 @@ paddle.init(use_gpu=True, trainer_count=1)
 # img_depth = 3
 img_height = 8
 img_width = 8
-img_depth = 3
+img_depth = 4
 
 inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
     img_height * img_width * img_depth))
