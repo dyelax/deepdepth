@@ -97,8 +97,8 @@ def img_reader():
 
     while True:
         for i in xrange(num_files / 2): # There is an rgb and d_image image per frame
-            d_image = Image.open('d-%d.pgm' % i)
-            rgb_image = Image.open('r-%d.ppm' % i)
+            d_image = Image.open(os.path.join(DIR, 'd-%d.pgm' % i))
+            rgb_image = Image.open(os.path.join(DIR, 'r-%d.ppm' % i))
             final_width = 128
             final_height = 128
 
