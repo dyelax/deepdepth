@@ -108,7 +108,7 @@ def img_reader():
         d_image = d_image.crop((left, top, right, bottom))
         rgb_image = rgb_image.crop((left, top, right, bottom))
 
-        depth_tensor = np.array(d_image, dtype=float).transpose((2, 0, 1))
+        depth_tensor = d_image
         rgb_tensor = np.array(rgb_image, dtype=float).transpose((2, 0, 1))
 
         depth_arr = depth_tensor.flatten()
