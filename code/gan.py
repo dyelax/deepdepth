@@ -97,6 +97,8 @@ def img_reader():
 
     while True:
         for i in xrange(num_files / 2): # There is an rgb and d_image image per frame
+            i = 0 # TODO remove
+
             d_image = Image.open(os.path.join(DIR, 'd-%d.pgm' % i))
             rgb_image = Image.open(os.path.join(DIR, 'r-%d.ppm' % i))
             final_width = 128
@@ -126,7 +128,7 @@ def img_reader():
 
 
 # Create optimizer
-optimizer = paddle.optimizer.Adam(learning_rate=0.0001)
+optimizer = paddle.optimizer.Adam(learning_rate=0.000001)
 
 # Create trainer
 trainer = paddle.trainer.SGD(cost=cost,
@@ -134,7 +136,7 @@ trainer = paddle.trainer.SGD(cost=cost,
                              update_equation=optimizer)
 
 batch_size = 32
-reader = paddle.minibatch.batch(img_reader, batch_size)
+reader = paddle.minibatch.batch(paddle.reader.shuffle(img_reader, batch_size), batch_size)
 
 feeding={'inputs': 0,
          'labels': 1}
