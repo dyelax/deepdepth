@@ -1,5 +1,6 @@
 import paddle.v2 as paddle
 import sys
+import numpy as np
 
 ##
 # Models
@@ -81,7 +82,7 @@ parameters = paddle.parameters.create(cost)
 
 def img_reader():
     # TODO: read in data and yield
-    pass
+    yield np.random.random([240, 320, 3]) * 2 - 1
 
 
 # Create optimizer
