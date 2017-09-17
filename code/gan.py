@@ -162,7 +162,7 @@ def event_handler(event):
             print 'b'
             pil_img = Image.fromarray(denormed_img.astype('uint8'))
             print 'c'
-            pil_img.save('../results/%d.jpg' % event.batch_id)
+            pil_img.save('/mnt/results/%d.jpg' % event.batch_id)
             print 'Image saved'
 
     if isinstance(event, paddle.event.EndPass):
@@ -179,6 +179,6 @@ def event_handler(event):
 
 trainer.train(
     reader=reader,
-    num_passes=1,
+    num_passes=1001,
     event_handler=event_handler,
     feeding=feeding)
