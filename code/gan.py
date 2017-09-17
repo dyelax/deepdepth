@@ -143,7 +143,7 @@ def event_handler(event):
 
 
 trainer.train(
-    reader=img_reader,
+    reader=reader,
     num_passes=200,
     event_handler=event_handler,
     feeding=feeding)
