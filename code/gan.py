@@ -7,44 +7,44 @@ import numpy as np
 ##
 
 #TODO: CUDNN
-def conv_block(inputs,
-               num_filter,
-               groups,
-               input_channels=None,
-               filter_size=3,
-               activation=paddle.activation.Relu(),
-               dropout=0.5):
-    return paddle.networks.img_conv_group(
-        input=inputs,
-        num_channels=input_channels,
-        conv_num_filter=[num_filter] * groups,
-        conv_filter_size=filter_size,
-        conv_act=activation,
-        conv_batchnorm_drop_rate=dropout)
-
-def D(inputs):
-    # VGG19 Kinda
-    # TODO: Pooling
-    conv1 = conv_block(inputs, 64, 2, input_channels=1)
-    conv2 = conv_block(conv1, 128, 2)
-    conv3 = conv_block(conv2, 256, 4)
-    conv4 = conv_block(conv3, 512, 4)
-    conv5 = conv_block(conv4, 512, 4)
-
-    fc_dim = 4096
-    fc1 = paddle.layer.fc(
-        input=conv5,
-        size=fc_dim,
-        act=paddle.activation.Relu(),
-        layer_attr=paddle.attr.Extra(drop_rate=0.5))
-    fc2 = paddle.layer.fc(
-        input=fc1,
-        size=fc_dim,
-        act=paddle.activation.Relu(),
-        layer_attr=paddle.attr.Extra(drop_rate=0.5))
-    out = paddle.layer.fc(input=fc2, size=1, act=paddle.activation.Sigmoid())
-
-    return out
+# def conv_block(inputs,
+#                num_filter,
+#                groups,
+#                input_channels=None,
+#                filter_size=3,
+#                activation=paddle.activation.Relu(),
+#                dropout=0.5):
+#     return paddle.networks.img_conv_group(
+#         input=inputs,
+#         num_channels=input_channels,
+#         conv_num_filter=[num_filter] * groups,
+#         conv_filter_size=filter_size,
+#         conv_act=activation,
+#         conv_batchnorm_drop_rate=dropout)
+#
+# def D(inputs):
+#     # VGG19 Kinda
+#     # TODO: Pooling
+#     conv1 = conv_block(inputs, 64, 2, input_channels=1)
+#     conv2 = conv_block(conv1, 128, 2)
+#     conv3 = conv_block(conv2, 256, 4)
+#     conv4 = conv_block(conv3, 512, 4)
+#     conv5 = conv_block(conv4, 512, 4)
+#
+#     fc_dim = 4096
+#     fc1 = paddle.layer.fc(
+#         input=conv5,
+#         size=fc_dim,
+#         act=paddle.activation.Relu(),
+#         layer_attr=paddle.attr.Extra(drop_rate=0.5))
+#     fc2 = paddle.layer.fc(
+#         input=fc1,
+#         size=fc_dim,
+#         act=paddle.activation.Relu(),
+#         layer_attr=paddle.attr.Extra(drop_rate=0.5))
+#     out = paddle.layer.fc(input=fc2, size=1, act=paddle.activation.Sigmoid())
+#
+#     return out
 
 def conv(inputs, fms, input_fms=None, filter_size=3, activation=paddle.activation.Relu()):
     return paddle.layer.img_conv(
@@ -93,7 +93,7 @@ img_depth = 3
 inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
     img_height * img_width * img_depth))
 labels = paddle.layer.data(name='labels', type=paddle.data_type.dense_vector(
-    img_height * img_width * img_depth))
+    img_height * img_width * 1))
 
 cost = paddle.layer.square_error_cost(input=G(inputs), label=labels)
 
