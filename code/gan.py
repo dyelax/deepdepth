@@ -112,8 +112,8 @@ def img_reader():
             d_image = d_image.crop((left, top, right, bottom))
             rgb_image = rgb_image.crop((left, top, right, bottom))
 
-            depth_arr = np.array(d_image)
-            rgb_arr = np.array(rgb_image)
+            depth_arr = np.array(d_image).flatten()
+            rgb_arr = np.array(rgb_image).flatten()
 
             # Normalize between between -1 and 1
             rgb_norm = (2 * (rgb_arr - np.max(rgb_arr))) / (-np.ptp(depth_arr) - 1)
