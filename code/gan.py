@@ -52,9 +52,9 @@ def conv(inputs, fms, input_fms=None, filter_size=3, activation=paddle.activatio
         filter_size=filter_size,
         num_filters=fms,
         num_channels=input_fms,
-        act=activation,
-        bias_attr=None,
-        padding=(filter_size // 2)
+        # act=activation,
+        # bias_attr=None,
+        # padding=(filter_size // 2)
     )
 
 def G(inputs):
@@ -66,7 +66,13 @@ def G(inputs):
     # conv6 = conv(conv5, 128)
     # out = conv(conv6, 1, 1, activation=paddle.activation.Linear())
 
-    out = conv(inputs, 2, input_fms=3)
+    # out = conv(inputs, 1, input_fms=3)
+
+    out = paddle.layer.img_conv(
+        input=inputs,
+        num_channels=3,
+        filter_size=3,
+        num_filters=1)
     return out
 
 
@@ -79,8 +85,8 @@ paddle.init(use_gpu=True, trainer_count=1)
 # img_height = 240
 # img_width = 320
 # img_depth = 3
-img_height = 28
-img_width = 28
+img_height = 8
+img_width = 8
 img_depth = 3
 
 inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
