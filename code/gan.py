@@ -129,7 +129,7 @@ def img_reader():
 
 
 # Create optimizer
-optimizer = paddle.optimizer.Adam(learning_rate=0.00001)
+optimizer = paddle.optimizer.Adam(learning_rate=0.000001)
 
 # Create trainer
 trainer = paddle.trainer.SGD(cost=cost,
