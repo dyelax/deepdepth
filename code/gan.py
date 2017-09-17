@@ -71,9 +71,8 @@ def G(inputs):
     out = paddle.layer.img_conv(
         input=inputs,
         num_channels=3,
-        filter_size=3,
-        num_filters=1,
-        padding=1)
+        filter_size=1,
+        num_filters=1)
     return out
 
 
