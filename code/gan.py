@@ -109,9 +109,9 @@ def img_reader():
         rgb_norm = rgb_arr / np.max(np.abs(rgb_arr), axis=0) # (2 * (rgb_arr - np.max(rgb_arr))) / (-np.ptp(rgb_arr) - 1)
         depth_norm = depth_arr / np.max(np.abs(depth_arr), axis=0) # (2 * (depth_arr - np.max(depth_arr))) / (-np.ptp(depth_arr) - 1)
 
-        d_image = Image.fromarray(depth_norm.astype('uint8'))
+        d_image = Image.fromarray((depth_norm * 255).astype('uint8'))
         d_image.convert('L').save('/mnt/results/depth.jpg')
-        rgb_image = Image.fromarray(rgb_norm.astype('uint8'))
+        rgb_image = Image.fromarray((rgb_norm * 255).astype('uint8'))
         rgb_image.convert('RGB').save('/mnt/results/rgb.jpg')
 
         #
