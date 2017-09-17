@@ -54,7 +54,7 @@ def conv(inputs, fms, input_fms=None, filter_size=3, activation=paddle.activatio
         num_channels=input_fms,
         act=activation,
         bias_attr=None,
-        padding=(filter_size / 2 - 1)
+        padding=(filter_size // 2)
     )
 
 def G(inputs):
