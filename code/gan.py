@@ -76,8 +76,8 @@ def G(inputs):
 
 paddle.init(use_gpu=True, trainer_count=1)
 
-img_height = 28
-img_width = 28
+img_height = 240
+img_width = 320
 img_depth = 3
 
 inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
@@ -92,7 +92,7 @@ parameters = paddle.parameters.create(cost)
 
 def img_reader():
     # TODO: read in data and yield
-    yield np.random.random([240, 320, 3]) * 2 - 1
+    yield np.random.random([img_height, img_width, img_depth]) * 2 - 1
 
 
 # Create optimizer
