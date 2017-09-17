@@ -58,7 +58,7 @@ def conv(inputs, fms, input_fms=None, filter_size=3, activation=paddle.activatio
     )
 
 def G(inputs):
-    conv1 = conv(inputs, 64, 2, 1)
+    conv1 = conv(inputs, 64, 2, 3)
     conv2 = conv(conv1, 128, 2)
     conv3 = conv(conv2, 256, 2, filter_size=5)
     conv4 = conv(conv3, 512, 2, filter_size=5)
