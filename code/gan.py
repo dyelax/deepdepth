@@ -144,7 +144,7 @@ feeding={'inputs': 0,
 # event handler to track training and testing process
 def event_handler(event):
     if isinstance(event, paddle.event.EndIteration):
-        if event.batch_id % 10 == 0:
+        if event.batch_id % 1 == 0:
             print "\nEpoch %d, Batch %d, Cost %f, %s" % (
                 event.pass_id, event.batch_id, event.cost, event.metrics)
         else:
