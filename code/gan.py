@@ -65,18 +65,9 @@ def G(inputs):
     conv1 = conv(inputs, 64, input_fms=3)
     conv2 = conv(conv1, 128)
     conv3 = conv(conv2, 256, filter_size=5)
-    # conv4 = conv(conv3, 512, filter_size=5)
-    conv5 = conv(conv3, 256, filter_size=5)
-    conv6 = conv(conv5, 128)
-    out = conv(conv6, 1, activation=paddle.activation.Linear())
-
-    # out = conv(inputs, 1, input_fms=3)
-
-    # out = paddle.layer.img_conv(
-    #     input=inputs,
-    #     num_channels=img_depth,
-    #     filter_size=1,
-    #     num_filters=1)
+    conv4 = conv(conv3, 256, filter_size=5)
+    conv5 = conv(conv4, 128)
+    out = conv(conv5, 1, activation=paddle.activation.Linear())
 
     return out
 
