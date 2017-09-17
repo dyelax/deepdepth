@@ -86,7 +86,8 @@ inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
 labels = paddle.layer.data(name='labels', type=paddle.data_type.dense_vector(
     img_height * img_width * 1))
 
-cost = paddle.layer.square_error_cost(input=G(inputs), label=labels)
+preds = G(inputs)
+cost = paddle.layer.square_error_cost(input=preds, label=labels)
 
 parameters = paddle.parameters.create(cost)
 
@@ -153,15 +154,15 @@ def event_handler(event):
 
         if event.batch_id % 10 == 0:
             print 'Saving image...'
-            result = trainer.test(reader=reader, feeding=feeding)#.reshape([img_height, img_width, img_depth])
-            print result.metrics
-            print result
-            # print 'a'
-            # denormed_result = (result + 1) * (255 / 2.)
-            # print 'b'
-            # img = Image.fromarray(denormed_result).astype(np.uint8)
-            # print 'c'
-            # img.save('results/%d.jpg') % event.batch_id
+            # result = trainer.test(reader=reader, feeding=feeding)#.reshape([img_height, img_width, img_depth])
+            result = trainer.infer(output_layer=preds, parameters=parameters, input=[[img_reader()[0]]], feeding=feeding)
+            print 'a'
+            img = result.reshape([img_height, img_width, img_depth])
+            denormed_img = (img + 1) * (255. / 2.)
+            print 'b'
+            pil_img = Image.fromarray(denormed_img).astype(np.uint8)
+            print 'c'
+            pil_img.save('results/%d.jpg') % event.batch_id
             print 'Image saved'
 
     if isinstance(event, paddle.event.EndPass):
