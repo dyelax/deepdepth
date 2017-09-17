@@ -123,7 +123,7 @@ def img_reader():
 
 
 # Create optimizer
-optimizer = paddle.optimizer.Adam(learning_rate=0.000005)
+optimizer = paddle.optimizer.Adam(learning_rate=0.0001)
 
 # Create trainer
 trainer = paddle.trainer.SGD(cost=cost,
@@ -142,33 +142,50 @@ def event_handler(event):
         if event.batch_id % 1 == 0:
             print "\nEpoch %d, Batch %d, Cost %f, %s" % (
                 event.pass_id, event.batch_id, event.cost, event.metrics)
-        # else:
-        #     sys.stdout.write('.')
-        #     sys.stdout.flush()
 
-
+        if event.batch_id % 500 == 0:
+            save_img(event.pass_id, event.batch_id)
 
     if isinstance(event, paddle.event.EndPass):
-        if event.pass_id % 10 == 0:
-            result = paddle.infer(output_layer=preds, parameters=parameters,
-                                  input=[[img_reader().next()[0]]],
-                                  feeding=feeding)
-            img = result.reshape([img_height, img_width])
-            denormed_img = (img + 1) * (255. / 2.)
-            pil_img = Image.fromarray(denormed_img.astype('uint8'))
-            pil_img.save('/mnt/results/%d.png' % event.pass_id)
-            print 'Image saved'
+        # save parameters
+        with open('/mnt/results/default/params_epoch_%d.tar' % event.pass_id, 'w') as f:
+            parameters.to_tar(f)
 
-            # save parameters
-            with open('params_epoch_%d.tar' % event.pass_id, 'w') as f:
-                parameters.to_tar(f)
-
+        save_img(event.pass_id)
         # result = trainer.test(
         #     reader=paddle.batch(
         #         paddle.dataset.cifar.test10(), batch_size=128),
         #     feeding=feeding)
         # print "\nTest with Epoch %d, %s" % (event.pass_id, result.metrics)
 
+
+def save_img(epoch, step):
+    rgb_image = Image.open(os.path.join(DIR, 'r-0.ppm')).resize((171, 128), Image.ANTIALIAS)
+    final_width = 128
+    final_height = 128
+
+    width, height = rgb_image.size  # Get dimensions
+
+    left = (width - final_width) / 2
+    top = (height - final_height) / 2
+    right = (width + final_width) / 2
+    bottom = (height + final_height) / 2
+
+    rgb_image = rgb_image.crop((left, top, right, bottom))
+
+    rgb_arr = np.array(rgb_image, dtype=float).flatten()
+
+    # Normalize between between -1 (0?) and 1
+    rgb_norm = rgb_arr / np.max(np.abs(rgb_arr))
+
+    result = paddle.infer(output_layer=preds, parameters=parameters,
+                          input=[[rgb_norm]],
+                          feeding=feeding)
+    img = result.reshape([img_height, img_width])
+    denormed_img = (img + 1) * (255. / 2.)
+    pil_img = Image.fromarray(denormed_img.astype('uint8'))
+    pil_img.save('/mnt/results/epoch-%d_step-%d.png' % (epoch, step))
+    print 'Image saved'
 
 trainer.train(
     reader=reader,
