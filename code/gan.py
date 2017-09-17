@@ -2,6 +2,10 @@ import paddle.v2 as paddle
 import sys
 import numpy as np
 
+img_height = 240
+img_width = 320
+img_depth = 3
+
 ##
 # Models
 ##
@@ -70,7 +74,7 @@ def G(inputs):
 
     out = paddle.layer.img_conv(
         input=inputs,
-        num_channels=4,
+        num_channels=img_depth,
         filter_size=1,
         num_filters=1)
     return out
@@ -82,12 +86,9 @@ def G(inputs):
 
 paddle.init(use_gpu=True, trainer_count=1)
 
-# img_height = 240
-# img_width = 320
-# img_depth = 3
-img_height = 8
-img_width = 8
-img_depth = 4
+# img_height = 8
+# img_width = 8
+# img_depth = 4
 
 inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
     img_height * img_width * img_depth))
