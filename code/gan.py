@@ -52,9 +52,10 @@ def G(inputs):
     conv1 = conv(inputs, 64, input_fms=3)
     conv2 = conv(conv1, 128)
     conv3 = conv(conv2, 256, filter_size=5)
-    conv4 = conv(conv3, 256, filter_size=5)
-    conv5 = conv(conv4, 128)
-    out = conv(conv5, 1, activation=paddle.activation.Linear())
+    conv4 = conv(conv3, 512, filter_size=5)
+    conv5 = conv(conv4, 256, filter_size=5)
+    conv6 = conv(conv5, 128)
+    out = conv(conv6, 1, activation=paddle.activation.Linear())
 
     return out
 
@@ -112,7 +113,7 @@ def img_reader():
 
 
 # Create optimizer
-optimizer = paddle.optimizer.Adam(learning_rate=0.000002)
+optimizer = paddle.optimizer.Adam(learning_rate=0.0000005)
 
 # Create trainer
 trainer = paddle.trainer.SGD(cost=cost,
