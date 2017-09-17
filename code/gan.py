@@ -85,7 +85,6 @@ def img_reader():
     # for i in xrange(num_files / 2): # There is an rgb and d_image image per frame
     for i in xrange(1): # There is an rgb and d_image image per frame
         d_image = Image.open(os.path.join(DIR, 'd-%d.pgm' % i)).resize((171, 128), Image.ANTIALIAS)
-        d_image.convert('L').save('/mnt/results/depth.jpg')
 
         rgb_image = Image.open(os.path.join(DIR, 'r-%d.ppm' % i)).resize((171, 128), Image.ANTIALIAS)
         final_width = 128
@@ -101,8 +100,7 @@ def img_reader():
         d_image = d_image.crop((left, top, right, bottom))
         rgb_image = rgb_image.crop((left, top, right, bottom))
 
-        # d_image.convert('L').save('/mnt/results/depth.jpg')
-        rgb_image.convert('RGB').save('/mnt/results/rgb.jpg')
+
 
         depth_arr = np.array(d_image).flatten()
         rgb_arr = np.array(rgb_image).flatten()
@@ -110,6 +108,11 @@ def img_reader():
         # Normalize between between -1 and 1
         rgb_norm = rgb_arr / np.max(np.abs(rgb_arr), axis=0) # (2 * (rgb_arr - np.max(rgb_arr))) / (-np.ptp(rgb_arr) - 1)
         depth_norm = depth_arr / np.max(np.abs(depth_arr), axis=0) # (2 * (depth_arr - np.max(depth_arr))) / (-np.ptp(depth_arr) - 1)
+
+        d_image = Image.fromarray(depth_norm.astype('uint8'))
+        d_image.convert('L').save('/mnt/results/depth.jpg')
+        rgb_image = Image.fromarray(rgb_norm.astype('uint8'))
+        rgb_image.convert('RGB').save('/mnt/results/rgb.jpg')
 
         yield (
             rgb_norm,
