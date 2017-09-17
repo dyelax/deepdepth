@@ -14,44 +14,6 @@ img_depth = 3
 DIR = '/mnt/processed/classrooms/classroom_0001a'
 
 #TODO: CUDNN
-# def conv_block(inputs,
-#                num_filter,
-#                groups,
-#                input_channels=None,
-#                filter_size=3,
-#                activation=paddle.activation.Relu(),
-#                dropout=0.5):
-#     return paddle.networks.img_conv_group(
-#         input=inputs,
-#         num_channels=input_channels,
-#         conv_num_filter=[num_filter] * groups,
-#         conv_filter_size=filter_size,
-#         conv_act=activation,
-#         conv_batchnorm_drop_rate=dropout)
-#
-# def D(inputs):
-#     # VGG19 Kinda
-#     # TODO: Pooling
-#     conv1 = conv_block(inputs, 64, 2, input_channels=1)
-#     conv2 = conv_block(conv1, 128, 2)
-#     conv3 = conv_block(conv2, 256, 4)
-#     conv4 = conv_block(conv3, 512, 4)
-#     conv5 = conv_block(conv4, 512, 4)
-#
-#     fc_dim = 4096
-#     fc1 = paddle.layer.fc(
-#         input=conv5,
-#         size=fc_dim,
-#         act=paddle.activation.Relu(),
-#         layer_attr=paddle.attr.Extra(drop_rate=0.5))
-#     fc2 = paddle.layer.fc(
-#         input=fc1,
-#         size=fc_dim,
-#         act=paddle.activation.Relu(),
-#         layer_attr=paddle.attr.Extra(drop_rate=0.5))
-#     out = paddle.layer.fc(input=fc2, size=1, act=paddle.activation.Sigmoid())
-#
-#     return out
 
 def conv(inputs, fms, input_fms=None, filter_size=3, activation=paddle.activation.Relu()):
     return paddle.layer.img_conv(
@@ -64,13 +26,38 @@ def conv(inputs, fms, input_fms=None, filter_size=3, activation=paddle.activatio
         padding=(filter_size // 2)
     )
 
+# def D(inputs):
+#     # TODO: Pooling
+#     conv1 = conv(inputs, 32, input_fms=1)
+#     conv2 = conv(conv1, 64)
+#     conv3 = conv(conv2, 128)
+#     conv4 = conv(conv3, 256)
+#
+#     fc_dim = 4096
+#     fc1 = paddle.layer.fc(
+#         input=conv4,
+#         size=fc_dim,
+#         act=paddle.activation.Relu(),
+#         layer_attr=paddle.attr.Extra(drop_rate=0.5))
+#     fc2 = paddle.layer.fc(
+#         input=fc1,
+#         size=fc_dim,
+#         act=paddle.activation.Relu(),
+#         layer_attr=paddle.attr.Extra(drop_rate=0.5))
+#     out = paddle.layer.fc(input=fc2, size=1, act=paddle.activation.Sigmoid())
+#
+#     return out
+
 def G(inputs):
     conv1 = conv(inputs, 64, input_fms=3)
     conv2 = conv(conv1, 128)
     conv3 = conv(conv2, 256, filter_size=5)
-    conv4 = conv(conv3, 256, filter_size=5)
-    conv5 = conv(conv4, 128)
-    out = conv(conv5, 1, activation=paddle.activation.Linear())
+    conv4 = conv(conv3, 512, filter_size=5)
+    conv5 = conv(conv4, 1024, filter_size=7)
+    conv6 = conv(conv5, 512, filter_size=5)
+    conv7 = conv(conv6, 256, filter_size=5)
+    conv8 = conv(conv7, 128)
+    out = conv(conv8, 1, activation=paddle.activation.Linear())
 
     return out
 
