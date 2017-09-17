@@ -3,7 +3,7 @@ import sys
 import numpy as np
 
 img_height = 240
-img_width = 320
+img_width = 240
 img_depth = 3
 
 ##
@@ -77,6 +77,7 @@ def G(inputs):
         num_channels=img_depth,
         filter_size=1,
         num_filters=1)
+
     return out
 
 
