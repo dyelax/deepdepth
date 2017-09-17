@@ -83,7 +83,7 @@ def img_reader():
 
     # while True:
     # for i in xrange(num_files / 2): # There is an rgb and d_image image per frame
-    for i in xrange(20): # There is an rgb and d_image image per frame
+    for i in xrange(1): # There is an rgb and d_image image per frame
         d_image = Image.open(os.path.join(DIR, 'd-%d.pgm' % i)).resize((171, 128))
         rgb_image = Image.open(os.path.join(DIR, 'r-%d.ppm' % i)).resize((171, 128))
         final_width = 128
@@ -120,7 +120,7 @@ trainer = paddle.trainer.SGD(cost=cost,
                              parameters=parameters,
                              update_equation=optimizer)
 
-batch_size = 4
+batch_size = 1
 reader = paddle.minibatch.batch(paddle.reader.shuffle(img_reader, batch_size), batch_size)
 
 feeding={'inputs': 0,
