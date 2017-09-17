@@ -2,8 +2,8 @@ import paddle.v2 as paddle
 import sys
 import numpy as np
 
-img_height = 240
-img_width = 240
+img_height = 28
+img_width = 28
 img_depth = 3
 
 ##
