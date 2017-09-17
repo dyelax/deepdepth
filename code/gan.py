@@ -130,14 +130,14 @@ def img_reader():
 
 
 # Create optimizer
-optimizer = paddle.optimizer.Adam(learning_rate=0.000005)
+optimizer = paddle.optimizer.Adam(learning_rate=0.0000008)
 
 # Create trainer
 trainer = paddle.trainer.SGD(cost=cost,
                              parameters=parameters,
                              update_equation=optimizer)
 
-batch_size = 16
+batch_size = 4
 reader = paddle.minibatch.batch(img_reader, batch_size)
 
 feeding={'inputs': 0,
