@@ -95,36 +95,36 @@ def img_reader():
     # TODO: read in data and yield
     num_files = len(os.listdir(DIR))
 
-    while True:
-        for i in xrange(num_files / 2): # There is an rgb and d_image image per frame
-            i = 0 # TODO remove
+    # while True:
+    #     for i in xrange(num_files / 2): # There is an rgb and d_image image per frame
+    i = 0 # TODO remove
 
-            d_image = Image.open(os.path.join(DIR, 'd-%d.pgm' % i))
-            rgb_image = Image.open(os.path.join(DIR, 'r-%d.ppm' % i))
-            final_width = 128
-            final_height = 128
+    d_image = Image.open(os.path.join(DIR, 'd-%d.pgm' % i))
+    rgb_image = Image.open(os.path.join(DIR, 'r-%d.ppm' % i))
+    final_width = 128
+    final_height = 128
 
-            width, height = d_image.size   # Get dimensions
+    width, height = d_image.size   # Get dimensions
 
-            left = (width - final_width)/2
-            top = (height - final_height)/2
-            right = (width + final_width)/2
-            bottom = (height + final_height)/2
+    left = (width - final_width)/2
+    top = (height - final_height)/2
+    right = (width + final_width)/2
+    bottom = (height + final_height)/2
 
-            d_image = d_image.crop((left, top, right, bottom))
-            rgb_image = rgb_image.crop((left, top, right, bottom))
+    d_image = d_image.crop((left, top, right, bottom))
+    rgb_image = rgb_image.crop((left, top, right, bottom))
 
-            depth_arr = np.array(d_image).flatten()
-            rgb_arr = np.array(rgb_image).flatten()
+    depth_arr = np.array(d_image).flatten()
+    rgb_arr = np.array(rgb_image).flatten()
 
-            # Normalize between between -1 and 1
-            rgb_norm = (2 * (rgb_arr - np.max(rgb_arr))) / (-np.ptp(depth_arr) - 1)
-            depth_norm = (2 * (depth_arr - np.max(depth_arr))) / (-np.ptp(depth_arr) - 1)
+    # Normalize between between -1 and 1
+    rgb_norm = (2 * (rgb_arr - np.max(rgb_arr))) / (-np.ptp(depth_arr) - 1)
+    depth_norm = (2 * (depth_arr - np.max(depth_arr))) / (-np.ptp(depth_arr) - 1)
 
-            yield (
-                rgb_norm,
-                depth_norm
-            )
+    yield (
+        rgb_norm,
+        depth_norm
+    )
 
 
 # Create optimizer
@@ -153,9 +153,12 @@ def event_handler(event):
 
         if event.batch_id % 10 == 0:
             print 'Saving image...'
-            result = trainer.test(reader=reader, feeding=feeding).reshape([img_height, img_width, img_depth])
+            result = trainer.test(reader=reader, num_passes=1, feeding=feeding).reshape([img_height, img_width, img_depth])
+            print 'a'
             denormed_result = (result + 1) * (255 / 2.)
+            print 'b'
             img = Image.fromarray(denormed_result).astype(np.uint8)
+            print 'c'
             img.save('results/%d.jpg') % event.batch_id
             print 'Image saved'
 
@@ -173,6 +176,6 @@ def event_handler(event):
 
 trainer.train(
     reader=reader,
-    num_passes=200,
+    num_passes=1,
     event_handler=event_handler,
     feeding=feeding)
