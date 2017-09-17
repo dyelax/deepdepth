@@ -102,8 +102,8 @@ def img_reader():
 
 
 
-        depth_arr = np.array(d_image).flatten()
-        rgb_arr = np.array(rgb_image).flatten()
+        depth_arr = np.array(d_image)#.flatten()
+        rgb_arr = np.array(rgb_image)#.flatten()
 
         # Normalize between between -1 and 1
         rgb_norm = rgb_arr / np.max(np.abs(rgb_arr), axis=0) # (2 * (rgb_arr - np.max(rgb_arr))) / (-np.ptp(rgb_arr) - 1)
@@ -113,6 +113,10 @@ def img_reader():
         d_image.convert('L').save('/mnt/results/depth.jpg')
         rgb_image = Image.fromarray(rgb_norm.astype('uint8'))
         rgb_image.convert('RGB').save('/mnt/results/rgb.jpg')
+
+        #
+        # rgb_arr = np.array(rgb_image).flatten()
+        # depth_arr = np.array(d_image).flatten()
 
         yield (
             rgb_norm,
