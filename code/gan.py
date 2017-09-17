@@ -2,9 +2,9 @@ import paddle.v2 as paddle
 import sys
 import numpy as np
 
-img_height = 8
-img_width = 8
-img_depth = 4
+img_height = 240
+img_width = 320
+img_depth = 3
 
 ##
 # Models
@@ -86,10 +86,6 @@ def G(inputs):
 
 paddle.init(use_gpu=True, trainer_count=1)
 
-# img_height = 8
-# img_width = 8
-# img_depth = 4
-
 inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
     img_height * img_width * img_depth))
 labels = paddle.layer.data(name='labels', type=paddle.data_type.dense_vector(
@@ -105,7 +101,7 @@ def img_reader():
     while True:
         yield (
             np.random.random(img_height * img_width * img_depth),
-            np.random.random([img_height, img_width, 1])
+            np.random.random(img_height * img_width * 1)
         )
 
 
