@@ -153,7 +153,7 @@ def event_handler(event):
 
         if event.batch_id % 10 == 0:
             print 'Saving image...'
-            result = trainer.test(reader=reader, num_passes=1, feeding=feeding).reshape([img_height, img_width, img_depth])
+            result = trainer.test(reader=reader, feeding=feeding).reshape([img_height, img_width, img_depth])
             print 'a'
             denormed_result = (result + 1) * (255 / 2.)
             print 'b'
