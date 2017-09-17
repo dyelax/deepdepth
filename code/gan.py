@@ -157,7 +157,7 @@ def event_handler(event):
             # result = trainer.test(reader=reader, feeding=feeding)#.reshape([img_height, img_width, img_depth])
             result = paddle.infer(output_layer=preds, parameters=parameters, input=[[img_reader().next()[0]]], feeding=feeding)
             print 'a'
-            img = result.reshape([img_height, img_width, 1])
+            img = result.reshape([img_height, img_width])
             denormed_img = (img + 1) * (255. / 2.)
             print 'b'
             pil_img = Image.fromarray(denormed_img.astype('uint8'))
