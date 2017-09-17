@@ -103,8 +103,8 @@ def img_reader():
     # TODO: read in data and yield
     while True:
         yield (
-            np.random.random([img_height, img_width, img_depth]) * 2 - 1,
-            np.random.random([img_height, img_width, 1]) * 2 - 1
+            np.random.random([img_height, img_width, img_depth]),
+            np.random.random([img_height, img_width, 1])
         )
 
 
