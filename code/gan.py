@@ -191,7 +191,7 @@ def save_img(epoch, step):
     img = result.reshape([img_height, img_width])
     denormed_img = (img + 1) * (255. / 2.)
     pil_img = Image.fromarray(denormed_img.astype('uint8'))
-    pil_img.save('/mnt/results/epoch-%d_step-%d.png' % (epoch, step))
+    pil_img.save('/mnt/results/default/epoch-%d_step-%d.png' % (epoch, step))
     print 'Image saved'
 
 trainer.train(
