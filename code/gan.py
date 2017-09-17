@@ -90,7 +90,7 @@ img_width = 8
 img_depth = 4
 
 inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
-    img_height * img_width * img_depth))
+    img_height * img_width))
 labels = paddle.layer.data(name='labels', type=paddle.data_type.dense_vector(
     img_height * img_width * 1))
 
