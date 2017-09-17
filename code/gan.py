@@ -115,7 +115,7 @@ trainer = paddle.trainer.SGD(cost=cost,
                              parameters=parameters,
                              update_equation=optimizer)
 
-batch_size = 32
+batch_size = 1
 reader = paddle.minibatch.batch(
     paddle.reader.shuffle(img_reader, batch_size), batch_size)
 
