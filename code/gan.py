@@ -99,8 +99,8 @@ def img_reader():
         d_image = d_image.crop((left, top, right, bottom))
         rgb_image = rgb_image.crop((left, top, right, bottom))
 
-        d_image.save('/mnt/results/depth.jpg')
-        rgb_image.save('/mnt/results/rgb.jpg')
+        d_image.convert('RGB').save('/mnt/results/depth.jpg')
+        rgb_image.convert('RGB').save('/mnt/results/rgb.jpg')
 
         depth_arr = np.array(d_image).flatten()
         rgb_arr = np.array(rgb_image).flatten()
