@@ -1,10 +1,12 @@
 import paddle.v2 as paddle
 import sys
 import numpy as np
+import os
 
 ##
 # Models
 ##
+DIR = '/mnt/processed/classrooms/classroom_0001a'
 
 #TODO: CUDNN
 def conv_block(inputs,
@@ -95,10 +97,36 @@ parameters = paddle.parameters.create(cost)
 
 def img_reader():
     # TODO: read in data and yield
-    yield (
-        np.random.random([img_height, img_width, img_depth]) * 2 - 1,
-        np.random.random([img_height, img_width, img_depth]) * 2 - 1
-    )
+    num_files = len(os.listdir(DIR))
+
+    while True:
+        for i in xrange(num_files / 2): # There is an rgb and depth image per frame
+            depth = PIL.open('d-%d.pgm' % d)
+            rgb = PIL.open('r-%d.ppm' % d)
+            final_width = 128
+            final_height = 128
+
+            width, height = im.size   # Get dimensions
+
+            left = (width - final_width)/2
+            top = (height - final_height)/2
+            right = (width + final_width)/2
+            bottom = (height + final_height)/2
+
+            depth = depth.crop((left, top, right, bottom))
+            rgb = rgb.crop((left, top, right, bottom))
+
+            depth_arr = np.array(depth)
+            rgb_arr = np.array(rgb)
+
+            # Normalize between between -1 and 1
+            rgb_norm = (2 * (rgb_arr - np.max(rgb_arr))) / (-np.ptp(depth_arr) - 1)
+            depth_norm = (2 * (depth_arr - np.max(depth_arr))) / (-np.ptp(depth_arr) - 1)
+
+            yield (
+                rgb_arr,
+                depth_norm
+            )
 
 
 # Create optimizer
