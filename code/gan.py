@@ -56,27 +56,27 @@ def conv(inputs, fms, input_fms=None, filter_size=3, activation=paddle.activatio
         filter_size=filter_size,
         num_filters=fms,
         num_channels=input_fms,
-        # act=activation,
-        # bias_attr=None,
-        # padding=(filter_size // 2)
+        act=activation,
+        bias_attr=None,
+        padding=(filter_size // 2)
     )
 
 def G(inputs):
-    # conv1 = conv(inputs, 64, input_fms=3)
-    # conv2 = conv(conv1, 128)
-    # conv3 = conv(conv2, 256, filter_size=5)
-    # conv4 = conv(conv3, 512, filter_size=5)
-    # conv5 = conv(conv4, 256, filter_size=5)
-    # conv6 = conv(conv5, 128)
-    # out = conv(conv6, 1, 1, activation=paddle.activation.Linear())
+    conv1 = conv(inputs, 64, input_fms=3)
+    conv2 = conv(conv1, 128)
+    conv3 = conv(conv2, 256, filter_size=5)
+    conv4 = conv(conv3, 512, filter_size=5)
+    conv5 = conv(conv4, 256, filter_size=5)
+    conv6 = conv(conv5, 128)
+    out = conv(conv6, 1, 1, activation=paddle.activation.Linear())
 
     # out = conv(inputs, 1, input_fms=3)
 
-    out = paddle.layer.img_conv(
-        input=inputs,
-        num_channels=img_depth,
-        filter_size=1,
-        num_filters=1)
+    # out = paddle.layer.img_conv(
+    #     input=inputs,
+    #     num_channels=img_depth,
+    #     filter_size=1,
+    #     num_filters=1)
 
     return out
 
@@ -129,11 +129,11 @@ def event_handler(event):
         else:
             sys.stdout.write('.')
             sys.stdout.flush()
-    # if isinstance(event, paddle.event.EndPass):
-        # # save parameters
-        # with open('params_epoch_%d.tar' % event.pass_id, 'w') as f:
-        #     parameters.to_tar(f)
-        #
+    if isinstance(event, paddle.event.EndPass):
+        # save parameters
+        with open('params_epoch_%d.tar' % event.pass_id, 'w') as f:
+            parameters.to_tar(f)
+
         # result = trainer.test(
         #     reader=paddle.batch(
         #         paddle.dataset.cifar.test10(), batch_size=128),
