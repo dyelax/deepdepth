@@ -2,6 +2,7 @@ import paddle.v2 as paddle
 import sys
 import numpy as np
 import os
+import PIL
 
 img_height = 128
 img_width = 128
@@ -95,31 +96,31 @@ def img_reader():
     num_files = len(os.listdir(DIR))
 
     while True:
-        for i in xrange(num_files / 2): # There is an rgb and depth image per frame
-            depth = PIL.open('d-%d.pgm' % d)
-            rgb = PIL.open('r-%d.ppm' % d)
+        for i in xrange(num_files / 2): # There is an rgb and d_image image per frame
+            d_image = PIL.open('d-%d.pgm' % i)
+            rgb_image = PIL.open('r-%d.ppm' % i)
             final_width = 128
             final_height = 128
 
-            width, height = im.size   # Get dimensions
+            width, height = d_image.size   # Get dimensions
 
             left = (width - final_width)/2
             top = (height - final_height)/2
             right = (width + final_width)/2
             bottom = (height + final_height)/2
 
-            depth = depth.crop((left, top, right, bottom))
-            rgb = rgb.crop((left, top, right, bottom))
+            d_image = d_image.crop((left, top, right, bottom))
+            rgb_image = rgb_image.crop((left, top, right, bottom))
 
-            depth_arr = np.array(depth)
-            rgb_arr = np.array(rgb)
+            depth_arr = np.array(d_image)
+            rgb_arr = np.array(rgb_image)
 
             # Normalize between between -1 and 1
             rgb_norm = (2 * (rgb_arr - np.max(rgb_arr))) / (-np.ptp(depth_arr) - 1)
             depth_norm = (2 * (depth_arr - np.max(depth_arr))) / (-np.ptp(depth_arr) - 1)
 
             yield (
-                rgb_arr,
+                rgb_norm,
                 depth_norm
             )
 
@@ -141,7 +142,7 @@ feeding={'inputs': 0,
 # event handler to track training and testing process
 def event_handler(event):
     if isinstance(event, paddle.event.EndIteration):
-        if event.batch_id % 100 == 0:
+        if event.batch_id % 10 == 0:
             print "\nEpoch %d, Batch %d, Cost %f, %s" % (
                 event.pass_id, event.batch_id, event.cost, event.metrics)
         else:
