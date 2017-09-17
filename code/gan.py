@@ -77,6 +77,12 @@ cost = paddle.layer.square_error_cost(input=preds, label=labels)
 parameters = paddle.parameters.create(cost)
 
 
+inference_topology = paddle.topology.Topology(layers=preds)
+with open('model-v1.pkl', 'wb') as f:
+    inference_topology.serialize_for_inference(f)
+
+
+
 def img_reader():
     num_files = len(os.listdir(DIR))
     num_pairs = num_files / 2
