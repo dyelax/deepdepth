@@ -78,12 +78,14 @@ parameters = paddle.parameters.create(cost)
 
 
 def img_reader():
-    # TODO: read in data and yield
     num_files = len(os.listdir(DIR))
+    num_pairs = num_files / 2
 
-    # while True:
-    # for i in xrange(num_files / 2): # There is an rgb and d_image image per frame
-    for i in xrange(1): # There is an rgb and d_image image per frame
+
+    indices = np.arange(num_pairs)
+    indices_shuffled = np.random.permutation(indices)
+
+    for i in indices_shuffled: # There is an rgb and d_image image per frame
         d_image = Image.open(os.path.join(DIR, 'd-%d.pgm' % i)).resize((171, 128), Image.ANTIALIAS)
 
         rgb_image = Image.open(os.path.join(DIR, 'r-%d.ppm' % i)).resize((171, 128), Image.ANTIALIAS)
@@ -106,17 +108,13 @@ def img_reader():
         rgb_arr = np.array(rgb_image, dtype=float).flatten()
 
         # Normalize between between -1 and 1
-        rgb_norm = rgb_arr / np.max(np.abs(rgb_arr)) # (2 * (rgb_arr - np.max(rgb_arr))) / (-np.ptp(rgb_arr) - 1)
-        depth_norm = depth_arr / np.max(np.abs(depth_arr)) # (2 * (depth_arr - np.max(depth_arr))) / (-np.ptp(depth_arr) - 1)
+        rgb_norm = rgb_arr / np.max(np.abs(rgb_arr))
+        depth_norm = depth_arr / np.max(np.abs(depth_arr))
 
         # d_image = Image.fromarray((depth_norm * 255).astype('uint8'))
         # d_image.convert('L').save('/mnt/results/depth.jpg')
         # rgb_image = Image.fromarray((rgb_norm * 255).astype('uint8'))
         # rgb_image.convert('RGB').save('/mnt/results/rgb.jpg')
-
-        #
-        # rgb_arr = np.array(rgb_image).flatten()
-        # depth_arr = np.array(d_image).flatten()
 
         yield (
             rgb_norm,
@@ -132,8 +130,8 @@ trainer = paddle.trainer.SGD(cost=cost,
                              parameters=parameters,
                              update_equation=optimizer)
 
-batch_size = 1
-reader = paddle.minibatch.batch(paddle.reader.shuffle(img_reader, batch_size), batch_size)
+batch_size = 8
+reader = paddle.minibatch.batch(img_reader, batch_size)
 
 feeding={'inputs': 0,
          'labels': 1}
