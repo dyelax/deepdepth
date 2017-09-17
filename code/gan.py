@@ -90,7 +90,7 @@ img_width = 8
 img_depth = 4
 
 inputs = paddle.layer.data(name='inputs', type=paddle.data_type.dense_vector(
-    img_height * img_width))
+    img_height * img_width * img_depth))
 labels = paddle.layer.data(name='labels', type=paddle.data_type.dense_vector(
     img_height * img_width * 1))
 
@@ -102,7 +102,7 @@ parameters = paddle.parameters.create(cost)
 def img_reader():
     # TODO: read in data and yield
     yield (
-        np.random.random([img_height, img_width, img_depth]) * 2 - 1,
+        np.random.random([img_height, img_width]) * 2 - 1,
         np.random.random([img_height, img_width, 1]) * 2 - 1
     )
 
@@ -144,7 +144,7 @@ def event_handler(event):
 
 
 trainer.train(
-    reader=reader,
+    reader=img_reader,
     num_passes=200,
     event_handler=event_handler,
     feeding=feeding)
