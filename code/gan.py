@@ -152,10 +152,19 @@ def event_handler(event):
         #     sys.stdout.write('.')
         #     sys.stdout.flush()
 
-        if event.batch_id % 10 == 0:
+
+
+    if isinstance(event, paddle.event.EndPass):
+        # save parameters
+        with open('params_epoch_%d.tar' % event.pass_id, 'w') as f:
+            parameters.to_tar(f)
+
+        if event.pass_id % 10 == 0:
             print 'Saving image...'
             # result = trainer.test(reader=reader, feeding=feeding)#.reshape([img_height, img_width, img_depth])
-            result = paddle.infer(output_layer=preds, parameters=parameters, input=[[img_reader().next()[0]]], feeding=feeding)
+            result = paddle.infer(output_layer=preds, parameters=parameters,
+                                  input=[[img_reader().next()[0]]],
+                                  feeding=feeding)
             print 'a'
             img = result.reshape([img_height, img_width])
             denormed_img = (img + 1) * (255. / 2.)
@@ -164,11 +173,6 @@ def event_handler(event):
             print 'c'
             pil_img.save('/mnt/results/%d.jpg' % event.batch_id)
             print 'Image saved'
-
-    if isinstance(event, paddle.event.EndPass):
-        # save parameters
-        with open('params_epoch_%d.tar' % event.pass_id, 'w') as f:
-            parameters.to_tar(f)
 
         # result = trainer.test(
         #     reader=paddle.batch(
