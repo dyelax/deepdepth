@@ -2,9 +2,9 @@ import paddle.v2 as paddle
 import sys
 import numpy as np
 
-img_height = 240
-img_width = 320
-img_depth = 3
+img_height = 8
+img_width = 8
+img_depth = 4
 
 ##
 # Models
