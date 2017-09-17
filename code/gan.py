@@ -102,17 +102,17 @@ def img_reader():
 
 
 
-        depth_arr = np.array(d_image, dtype=float)#.flatten()
-        rgb_arr = np.array(rgb_image, dtype=float)#.flatten()
+        depth_arr = np.array(d_image, dtype=float).flatten()
+        rgb_arr = np.array(rgb_image, dtype=float).flatten()
 
         # Normalize between between -1 and 1
         rgb_norm = rgb_arr / np.max(np.abs(rgb_arr)) # (2 * (rgb_arr - np.max(rgb_arr))) / (-np.ptp(rgb_arr) - 1)
         depth_norm = depth_arr / np.max(np.abs(depth_arr)) # (2 * (depth_arr - np.max(depth_arr))) / (-np.ptp(depth_arr) - 1)
 
-        d_image = Image.fromarray((depth_norm * 255).astype('uint8'))
-        d_image.convert('L').save('/mnt/results/depth.jpg')
-        rgb_image = Image.fromarray((rgb_norm * 255).astype('uint8'))
-        rgb_image.convert('RGB').save('/mnt/results/rgb.jpg')
+        # d_image = Image.fromarray((depth_norm * 255).astype('uint8'))
+        # d_image.convert('L').save('/mnt/results/depth.jpg')
+        # rgb_image = Image.fromarray((rgb_norm * 255).astype('uint8'))
+        # rgb_image.convert('RGB').save('/mnt/results/rgb.jpg')
 
         #
         # rgb_arr = np.array(rgb_image).flatten()
@@ -158,7 +158,7 @@ def event_handler(event):
             img = result.reshape([img_height, img_width])
             denormed_img = (img + 1) * (255. / 2.)
             pil_img = Image.fromarray(denormed_img.astype('uint8'))
-            pil_img.save('/mnt/results/%d.jpg' % event.pass_id)
+            pil_img.save('/mnt/results/%d.png' % event.pass_id)
             print 'Image saved'
 
             # save parameters
