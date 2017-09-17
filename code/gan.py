@@ -49,13 +49,13 @@ def D(inputs):
     return out
 
 def G(inputs):
-    conv1 = conv_block(inputs, 64, 2, 1),
-    conv2 = conv_block(conv1, 128, 2),
-    conv3 = conv_block(conv2, 256, 2, filter_size=5),
-    conv4 = conv_block(conv3, 512, 2, filter_size=5),
-    conv5 = conv_block(conv4, 256, 2, filter_size=5),
-    conv6 = conv_block(conv5, 128, 2),
-    out = conv_block(conv6, 1, 1, dropout=0),
+    conv1 = conv_block(inputs, 64, 2, 1)
+    conv2 = conv_block(conv1, 128, 2)
+    conv3 = conv_block(conv2, 256, 2, filter_size=5)
+    conv4 = conv_block(conv3, 512, 2, filter_size=5)
+    conv5 = conv_block(conv4, 256, 2, filter_size=5)
+    conv6 = conv_block(conv5, 128, 2)
+    out = conv_block(conv6, 1, 1, dropout=0)
 
     return out
 
